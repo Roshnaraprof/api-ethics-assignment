@@ -22,6 +22,7 @@ Fix:
 Use environment variables instead
 #Fix for voilation 1:
 
+```python
 import os
 import requests
 
@@ -33,7 +34,7 @@ for page in range(1, 101):
     response = requests.get(API_URL, params={"page": page, "key": API_KEY})
     data = response.json()
     records.extend(data["results"])
-
+```
 
 Violation 2: Bulk Data Scraping Without Limits / Consent
 
@@ -52,6 +53,7 @@ Fetch only required data
 
 Fix for voilation 2:
 
+```python
 import os
 import requests
 import time
@@ -60,19 +62,16 @@ API_URL = "https://healthstats-api.example.com/records"
 API_KEY = os.getenv("API_KEY")
 
 records = []
-MAX_PAGES = 20  # Limit to only required data
+MAX_PAGES = 20  # Limit to required data
 
 for page in range(1, MAX_PAGES + 1):
     response = requests.get(API_URL, params={"page": page, "key": API_KEY})
-    
+
     if response.status_code != 200:
         break
-    
+
     data = response.json()
     records.extend(data.get("results", []))
-    
-    time.sleep(1)  # Respect rate limits
 
-# Store only necessary fields after anonymization
-save_to_database(records)
-'''
+    time.sleep(1)  # Respect API rate limits
+```
